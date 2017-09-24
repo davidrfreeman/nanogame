@@ -1,3 +1,4 @@
+// Commented out to expose vars and functions for testing
 // window.addEventListener('load', () => {
   let canvas = document.querySelector('#canvas');
   let ctx = canvas.getContext('2d');
@@ -53,19 +54,19 @@
     if(x < 150) {
       if(y<150) {
         playerPattern.push(1);
-        console.log(playerPattern)
+        console.log('Blue')
       } else {
         playerPattern.push(4);
-        console.log(playerPattern)
+        console.log('Yellow')
       }
     }
     if(x > 150) {
       if(y < 150) {
         playerPattern.push(2);
-        console.log(playerPattern)
+        console.log('Green')
       } else {
         playerPattern.push(3);
-        console.log(playerPattern)
+        console.log('Red')
       }
     }
   });
@@ -80,27 +81,27 @@
   };
 
   // generate a psuedo random number from 1-4, these numbers will be used to create a pattern of buttons to display to the player
-  let randomButton = () => {
+  let randoNumber = () => {
     return Math.ceil(Math.random()*4);
   };
 
 
   // number representing what round the player is on
-  let round = 1;
+  let round = 0;
 
+  // This will call the random number generator and push it to the end of the programPattern array
   let populate = () => {
-    while(round > 0) {
-      programPattern.push(randomButton());
-      round--;
-    }
+    programPattern.push(randoNumber());
   }
 
   // begins a new game
   let start = () => {
-    populate();
-    console.log("I've been clicked");
-    // removes listener so programPattern array cannot be altered by another button click
-    startButton.removeEventListener('click', start);
+    if(round === 0) {
+      populate();
+      console.log("I've been clicked");
+      // removes listener so programPattern array cannot be altered by another button click
+      startButton.removeEventListener('click', start);
+    }
   }
   // listens for click to begin new game
   startButton.addEventListener('click', start);
