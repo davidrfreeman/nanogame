@@ -5,6 +5,9 @@
 
   let startButton = document.querySelector('#startgame');
 
+  // number representing what round the player is on
+  let round = 0;
+
   // array to hold the generated pattern
   let programPattern = [];
   // array to hold the players pattern
@@ -48,13 +51,20 @@
   // listener listens for clicks on the canvas
   canvas.addEventListener('click', (e) => {
     // these two varables store the x and y values of the click
-    let x = e.pageX,
-        y = e.pageY;
+    let x = e.offsetX,
+        y = e.offsetY;
+        console.log(x+" "+y)
     // if statements split the canvas into quadrants
     if(x < 150) {
       if(y<150) {
-        playerPattern.push(1);
-        console.log('Blue')
+        // playerPattern.push(1);
+        console.log('Blue');
+        programPattern[round] === 1 ? (
+          round++,
+          populate()
+        ) : (
+          alert("You Lost")
+        )
       } else {
         playerPattern.push(4);
         console.log('Yellow')
@@ -85,20 +95,19 @@
     return Math.ceil(Math.random()*4);
   };
 
-
-  // number representing what round the player is on
-  let round = 0;
-
   // This will call the random number generator and push it to the end of the programPattern array
   let populate = () => {
     programPattern.push(randoNumber());
+    console.log(programPattern);
   }
 
   // begins a new game
   let start = () => {
     if(round === 0) {
+      buttons.map((i) => draw(i));
       populate();
       console.log("I've been clicked");
+      startButton.className += " disabled";
       // removes listener so programPattern array cannot be altered by another button click
       startButton.removeEventListener('click', start);
     }
@@ -107,5 +116,5 @@
   startButton.addEventListener('click', start);
 
   // iterate over the buttons array and call the draw function using each object in the array
-  buttons.map((i) => draw(i))
+
 // })
