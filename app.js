@@ -1,5 +1,5 @@
 // Commented out to expose vars and functions for testing
-// window.addEventListener('load', () => {
+document.addEventListener('DOMContentLoaded', () => {
   let canvas = document.querySelector('#canvas');
   let ctx = canvas.getContext('2d');
 
@@ -10,8 +10,6 @@
 
   // array to hold the generated pattern
   let programPattern = [];
-  // array to hold the players pattern
-  let playerPattern = [];
   // buttons array hold objects that have information to draw each individual button
   let buttons = [
     {
@@ -53,33 +51,42 @@
     // these two varables store the x and y values of the click
     let x = e.offsetX,
         y = e.offsetY;
-        console.log(x+" "+y)
+    console.log(x+" "+y)
+    console.log(round);
     // if statements split the canvas into quadrants
-    if(x < 150) {
+    if (x < 150) {
       if(y<150) {
-        // playerPattern.push(1);
-        console.log('Blue');
-        programPattern[round] === 1 ? (
-          round++,
-          populate()
-        ) : (
-          alert("You Lost")
-        )
+        if(programPattern[round] !== 1) {
+          lost();
+          return;
+        }
       } else {
-        playerPattern.push(4);
-        console.log('Yellow')
+        if(programPattern[round] !== 4) {
+          lost();
+          return;
+        }
       }
     }
-    if(x > 150) {
-      if(y < 150) {
-        playerPattern.push(2);
-        console.log('Green')
+    if(x>150) {
+      if(y<150) {
+        if(programPattern[round] !== 2) {
+          lost();
+          return;
+        }
       } else {
-        playerPattern.push(3);
-        console.log('Red')
+        if(programPattern[round]!==3) {
+          lost();
+          return;
+        }
       }
     }
-  });
+    if(programPattern.length - 1 === round) {
+      round = 0;
+      populate();
+      return;
+    }
+    round++;
+    });
 
   // function to draw an arc, requires input to be provided, this will use the objects in the buttons array
   let draw = (elem) => {
@@ -99,22 +106,33 @@
   let populate = () => {
     programPattern.push(randoNumber());
     console.log(programPattern);
+    console.log(round);
   }
 
   // begins a new game
   let start = () => {
     if(round === 0) {
+      // iterate over the buttons array and call the draw function using each object in the array
       buttons.map((i) => draw(i));
       populate();
       console.log("I've been clicked");
-      startButton.className += " disabled";
+      console.log(round);
+      startButton.disabled = true;
       // removes listener so programPattern array cannot be altered by another button click
       startButton.removeEventListener('click', start);
     }
   }
+
+  let lost = () => {
+    console.log("You Lost");
+    round = 0;
+    programPattern = [];
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    startButton.disabled = false;
+    startButton.addEventListener('click', start);
+    console.log(round)
+  }
   // listens for click to begin new game
   startButton.addEventListener('click', start);
 
-  // iterate over the buttons array and call the draw function using each object in the array
-
-// })
+})
