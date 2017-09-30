@@ -1,5 +1,5 @@
 // Commented out to expose vars and functions for testing
-document.addEventListener('DOMContentLoaded', () => {
+// document.addEventListener('DOMContentLoaded', () => {
   let canvas = document.querySelector('#canvas');
   let ctx = canvas.getContext('2d');
 
@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let buttons = [
     {
       color: 'green',
+      blurred: 'rgb(132, 224, 132)',
       x: 150,
       y: 150,
       radius: 80,
@@ -22,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     {
       color: 'red',
+      blurred: 'rgb(222, 143, 143)',
       x: 150,
       y: 155,
       radius: 80,
@@ -30,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     {
       color: 'yellow',
+      blurred: 'rgb(247, 247, 119)',
       x: 145,
       y: 155,
       radius: 80,
@@ -38,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     {
       color: 'blue',
+      blurred: 'rgb(157, 157, 255)',
       x: 145,
       y: 150,
       radius: 80,
@@ -50,32 +54,41 @@ document.addEventListener('DOMContentLoaded', () => {
   canvas.addEventListener('click', (e) => {
     // these two varables store the x and y values of the click
     let x = e.offsetX,
-        y = e.offsetY;
+        y = e.offsetY,
+        i;
     console.log(x+" "+y)
     console.log(round);
     // if statements split the canvas into quadrants
     if (x < 150) {
       if(y<150) {
+        i = 3;
+        selection(i);
         if(programPattern[round] !== 1) {
-          lost();
+          incorrecr();
           return;
         }
       } else {
+        i = 2;
+        selection(i);
         if(programPattern[round] !== 4) {
-          lost();
+          incorrecr();
           return;
         }
       }
     }
     if(x>150) {
       if(y<150) {
+        i = 0;
+        selection(i);
         if(programPattern[round] !== 2) {
-          lost();
+          incorrecr();
           return;
         }
       } else {
+        i = 1;
+        selection(i);
         if(programPattern[round]!==3) {
-          lost();
+          incorrecr();
           return;
         }
       }
@@ -96,6 +109,21 @@ document.addEventListener('DOMContentLoaded', () => {
            ctx.strokeStyle = elem.color,
            ctx.stroke();
   };
+
+  // this function will 'illuminate' a button when selected by a player
+  let selection = (i) => {
+    drawBlur(buttons[i]);
+    setTimeout(()=>draw(buttons[i]),100);
+  }
+
+  let drawBlur = (elem) => {
+    return ctx.beginPath(),
+    ctx.lineWidth = 50,
+    ctx.arc(elem.x, elem.y, elem.radius, elem.sangle, elem.eangle, false),
+    ctx.strokeStyle = elem.blurred,
+    ctx.stroke();
+  };
+
 
   // generate a psuedo random number from 1-4, these numbers will be used to create a pattern of buttons to display to the player
   let randoNumber = () => {
@@ -135,4 +163,4 @@ document.addEventListener('DOMContentLoaded', () => {
   // listens for click to begin new game
   startButton.addEventListener('click', start);
 
-})
+// })
