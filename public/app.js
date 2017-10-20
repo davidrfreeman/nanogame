@@ -146,8 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   
 
-  canvas.addEventListener('mousedown', playerSelection);
-  canvas.addEventListener('mouseup', checkPattern);
+  canvas.addEventListener('mousedown, touchstart', playerSelection);
+  canvas.addEventListener('mouseup touchend', checkPattern);
 
   // function to draw an arc, requires input to be provided, this will use the objects in the buttons array
   let draw = (elem) => {
