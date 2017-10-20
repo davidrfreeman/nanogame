@@ -1,4 +1,4 @@
-// document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
 // Commented out to expose vars and functions for testing
   let canvas = document.querySelector('#canvas');
   let ctx = canvas.getContext('2d');
@@ -10,6 +10,7 @@
 
   // array to hold the generated pattern
   let programPattern = [];
+
   // buttons array hold objects that have information to draw each individual button
   let buttons = [
     {
@@ -20,6 +21,7 @@
       radius: 80,
       sangle: Math.PI*1,
       eangle: Math.PI*1.5,
+      sound: new Audio('https://s3.amazonaws.com/freecodecamp/simonSound1.mp3')
     },
     {
       color: 'green',
@@ -29,6 +31,7 @@
       radius: 80,
       sangle: Math.PI*1.5,
       eangle: 0,
+      sound: new Audio('https://s3.amazonaws.com/freecodecamp/simonSound2.mp3')
     },
     {
       color: 'red',
@@ -38,6 +41,7 @@
       radius: 80,
       sangle: Math.PI*0,
       eangle: Math.PI*0.5,
+      sound: new Audio('https://s3.amazonaws.com/freecodecamp/simonSound3.mp3')
     },
     {
       color: 'yellow',
@@ -47,6 +51,7 @@
       radius: 80,
       sangle: Math.PI*0.5,
       eangle: Math.PI*1,
+      sound: new Audio('https://s3.amazonaws.com/freecodecamp/simonSound4.mp3')
     }
   ];
 
@@ -64,14 +69,18 @@
     // if statements split the canvas into quadrants
     if (x < 150) {
       if(y<150) {
+        buttons[0].sound.play();
         draw(buttons[0]);
+        
         i = 0;
         if(programPattern[round] !== 0) {
           lost();
           return;
         }
       } else {
+        buttons[3].sound.play();
         draw(buttons[3]);
+        
         i = 3;
         if(programPattern[round] !== 3) {
           lost();
@@ -81,14 +90,18 @@
     }
     if(x>150) {
       if(y<150) {
+        buttons[1].sound.play();
         draw(buttons[1]);
+        
         i = 1;
         if(programPattern[round] !== 1) {
           lost();
           return;
         }
       } else {
+        buttons[2].sound.play();
         draw(buttons[2]);
+        
         i = 2;
         if(programPattern[round]!==2) {
           lost();
@@ -164,6 +177,8 @@
   // This will call the random number generator and push it to the end of the programPattern array
   let populate = () => {
     programPattern.push(randoNumber());
+    let roundDisplay = document.querySelector('#round');
+    roundDisplay.innerText = String(programPattern.length);
     console.log("Computer Pattern: " + programPattern);
     displayPattern(programPattern,0);
   }
@@ -175,7 +190,9 @@
       ctx.fillRect(0,0,canvas.width,canvas.height)
       // iterate over the buttons array and call the draw function using each object in the array
       buttons.map((i) => draw(i));
-      window.setTimeout(populate,500);
+      setTimeout(populate,1000);
+      let roundCount = document.querySelector('#roundCount');
+      roundCount.style.display = "block";
       console.log("Round: " + round);
       startButton.disabled = true;
       // removes listener so programPattern array cannot be altered by another button click
@@ -198,6 +215,7 @@
 
 // click shpws when a button has been clicked
 let click = (obj,i,time) => {
+  buttons[obj[i]].sound.play();
   drawBlur(buttons[obj[i]]);
   window.setTimeout(() => {
     draw(buttons[obj[i]]);
@@ -219,4 +237,4 @@ let displayPattern = (obj,i) => {
   // listens for click to begin new game
   startButton.addEventListener('click', start);
 
-// })
+})
