@@ -1,5 +1,5 @@
-// Commented out to expose vars and functions for testing
 // document.addEventListener('DOMContentLoaded', () => {
+// Commented out to expose vars and functions for testing
   let canvas = document.querySelector('#canvas');
   let ctx = canvas.getContext('2d');
 
@@ -41,7 +41,7 @@
     },
     {
       color: 'yellow',
-      blurred: 'rgb(247, 247, 119)',
+      blurred: 'rgb(248, 248, 214)',
       x: 145,
       y: 155,
       radius: 80,
@@ -50,8 +50,11 @@
     }
   ];
 
+
+  
+
   // listener listens for mousedown on the canvas
-  let buttonClick = (e) => {
+  let checkPattern = (e) => {
     // these two varables store the x and y values of the click
     let x = e.offsetX,
         y = e.offsetY,
@@ -61,54 +64,77 @@
     // if statements split the canvas into quadrants
     if (x < 150) {
       if(y<150) {
+        draw(buttons[0]);
         i = 0;
-        // selection(i);
         if(programPattern[round] !== 0) {
           lost();
           return;
-        } else {
-          selection(i);
         }
       } else {
+        draw(buttons[3]);
         i = 3;
-        // selection(i);
         if(programPattern[round] !== 3) {
           lost();
           return;
-        } else {
-          selection(i);
         }
       }
     }
     if(x>150) {
       if(y<150) {
+        draw(buttons[1]);
         i = 1;
-        // selection(i);
         if(programPattern[round] !== 1) {
           lost();
           return;
-        } else {
-          selection(i);
         }
       } else {
+        draw(buttons[2]);
         i = 2;
-        // selection(i);
         if(programPattern[round]!==2) {
           lost();
           return;
         } else {
-          selection(i);
+
         }
       }
     }
     if(programPattern.length - 1 === round) {
       round = 0;
-      canvas.removeEventListener('mouseup', buttonClick);
-      selection(i).then(populate());
+      // delay pushing new selection to pattern, this is to delay the displaying of the pattern
+      setTimeout(populate,500);
       return;
     }
     round++;
-    };
+  };
+
+  let playerSelection = (e) => {
+    // these two varables store the x and y values of the click
+    let x = e.offsetX,
+        y = e.offsetY,
+        i;
+    // if statements split the canvas into quadrants
+    if (x < 150) {
+      if(y<150) {
+       drawBlur(buttons[0])
+      } else {
+        drawBlur(buttons[3])
+      }
+    }
+    if(x>150) {
+      if(y<150) {
+        drawBlur(buttons[1])
+      } else {
+        drawBlur(buttons[2])
+      }
+    }
+    
+  };
+
+
+  
+
+  canvas.addEventListener('mousedown', playerSelection);
+  canvas.addEventListener('mouseup', checkPattern);
 
   // function to draw an arc, requires input to be provided, this will use the objects in the buttons array
   let draw = (elem) => {
@@ -119,11 +145,7 @@
            ctx.stroke();
   };
 
-  // this function will 'illuminate' a button when selected by a player
-  let selection = async (i) => {
-    drawBlur(buttons[i]);
-    setTimeout(()=>draw(buttons[i]),500);
-  }
+ 
 
   let drawBlur = (elem) => {
     return ctx.beginPath(),
@@ -142,19 +164,19 @@
   // This will call the random number generator and push it to the end of the programPattern array
   let populate = () => {
     programPattern.push(randoNumber());
-    console.log(programPattern);
-    console.log(round);
-    
+    console.log("Computer Pattern: " + programPattern);
+    displayPattern(programPattern,0);
   }
 
   // begins a new game
   let start = () => {
     if(round === 0) {
+      ctx.fillStyle = "rgb(94, 94, 94)";
+      ctx.fillRect(0,0,canvas.width,canvas.height)
       // iterate over the buttons array and call the draw function using each object in the array
       buttons.map((i) => draw(i));
-      populate();
-      console.log("I've been clicked");
-      console.log(round);
+      window.setTimeout(populate,500);
+      console.log("Round: " + round);
       startButton.disabled = true;
       // removes listener so programPattern array cannot be altered by another button click
       startButton.removeEventListener('click', start);
@@ -166,23 +188,28 @@
     round = 0;
     programPattern = [];
     ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.font = '30px Arial';
+    ctx.fillText("You Lost",100,150);
     startButton.disabled = false;
     startButton.addEventListener('click', start);
     console.log(round)
   }
 
-function simulateClick(obj,i) {
+
+// click shpws when a button has been clicked
+let click = (obj,i,time) => {
   drawBlur(buttons[obj[i]]);
   window.setTimeout(() => {
     draw(buttons[obj[i]]);
-  },500);
+  },time);
 };
 
-function displayPattern(obj,i) {
-  simulateClick(obj,i);
+// this function will
+let displayPattern = (obj,i) => {
+  click(obj,i,500);
   window.setTimeout(function() {
     if(obj[i+1]!==undefined) {
-    simulateClick(obj,i+1);
+      displayPattern(obj,i+1);
     };
   },1000);
 };
