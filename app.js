@@ -13,6 +13,15 @@
   // buttons array hold objects that have information to draw each individual button
   let buttons = [
     {
+      color: 'blue',
+      blurred: 'rgb(157, 157, 255)',
+      x: 145,
+      y: 150,
+      radius: 80,
+      sangle: Math.PI*1,
+      eangle: Math.PI*1.5,
+    },
+    {
       color: 'green',
       blurred: 'rgb(132, 224, 132)',
       x: 150,
@@ -38,20 +47,11 @@
       radius: 80,
       sangle: Math.PI*0.5,
       eangle: Math.PI*1,
-    },
-    {
-      color: 'blue',
-      blurred: 'rgb(157, 157, 255)',
-      x: 145,
-      y: 150,
-      radius: 80,
-      sangle: Math.PI*1,
-      eangle: Math.PI*1.5,
     }
   ];
 
-  // listener listens for clicks on the canvas
-  canvas.addEventListener('click', (e) => {
+  // listener listens for mousedown on the canvas
+  let buttonClick = (e) => {
     // these two varables store the x and y values of the click
     let x = e.offsetX,
         y = e.offsetY,
@@ -61,45 +61,54 @@
     // if statements split the canvas into quadrants
     if (x < 150) {
       if(y<150) {
-        i = 3;
-        selection(i);
-        if(programPattern[round] !== 1) {
-          incorrecr();
+        i = 0;
+        // selection(i);
+        if(programPattern[round] !== 0) {
+          lost();
           return;
+        } else {
+          selection(i);
         }
       } else {
-        i = 2;
-        selection(i);
-        if(programPattern[round] !== 4) {
-          incorrecr();
+        i = 3;
+        // selection(i);
+        if(programPattern[round] !== 3) {
+          lost();
           return;
+        } else {
+          selection(i);
         }
       }
     }
     if(x>150) {
       if(y<150) {
-        i = 0;
-        selection(i);
-        if(programPattern[round] !== 2) {
-          incorrecr();
+        i = 1;
+        // selection(i);
+        if(programPattern[round] !== 1) {
+          lost();
           return;
+        } else {
+          selection(i);
         }
       } else {
-        i = 1;
-        selection(i);
-        if(programPattern[round]!==3) {
-          incorrecr();
+        i = 2;
+        // selection(i);
+        if(programPattern[round]!==2) {
+          lost();
           return;
+        } else {
+          selection(i);
         }
       }
     }
     if(programPattern.length - 1 === round) {
       round = 0;
-      populate();
+      canvas.removeEventListener('mouseup', buttonClick);
+      selection(i).then(populate());
       return;
     }
     round++;
-    });
+    };
 
   // function to draw an arc, requires input to be provided, this will use the objects in the buttons array
   let draw = (elem) => {
@@ -111,9 +120,9 @@
   };
 
   // this function will 'illuminate' a button when selected by a player
-  let selection = (i) => {
+  let selection = async (i) => {
     drawBlur(buttons[i]);
-    setTimeout(()=>draw(buttons[i]),100);
+    setTimeout(()=>draw(buttons[i]),500);
   }
 
   let drawBlur = (elem) => {
@@ -127,7 +136,7 @@
 
   // generate a psuedo random number from 1-4, these numbers will be used to create a pattern of buttons to display to the player
   let randoNumber = () => {
-    return Math.ceil(Math.random()*4);
+    return Math.floor(Math.random()*4);
   };
 
   // This will call the random number generator and push it to the end of the programPattern array
@@ -135,6 +144,7 @@
     programPattern.push(randoNumber());
     console.log(programPattern);
     console.log(round);
+    
   }
 
   // begins a new game
@@ -160,6 +170,25 @@
     startButton.addEventListener('click', start);
     console.log(round)
   }
+
+function simulateClick(obj,i) {
+  drawBlur(buttons[obj[i]]);
+  window.setTimeout(() => {
+    draw(buttons[obj[i]]);
+  },500);
+};
+
+function displayPattern(obj,i) {
+  simulateClick(obj,i);
+  window.setTimeout(function() {
+    if(obj[i+1]!==undefined) {
+    simulateClick(obj,i+1);
+    };
+  },1000);
+};
+
+
+
   // listens for click to begin new game
   startButton.addEventListener('click', start);
 
