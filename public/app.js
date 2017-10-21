@@ -1,5 +1,5 @@
-document.addEventListener('DOMContentLoaded', () => {
-// Commented out to expose vars and functions for testing
+// document.addEventListener('DOMContentLoaded', () => {
+
   let canvas = document.querySelector('#canvas');
   let ctx = canvas.getContext('2d');
 
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
       sound: new Audio('https://s3.amazonaws.com/freecodecamp/simonSound3.mp3')
     },
     {
-      color: 'yellow',
+      color: 'rgb(242, 220, 0)',
       blurred: 'rgb(248, 248, 214)',
       x: 145,
       y: 155,
@@ -106,12 +106,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if(programPattern[round]!==2) {
           lost();
           return;
-        } else {
-
         }
       }
     }
     if(programPattern.length - 1 === round) {
+      if(programPattern.length === 20 ) {
+        setTimeout(won, 500)
+        return
+      }
       round = 0;
       // delay pushing new selection to pattern, this is to delay the displaying of the pattern
       setTimeout(populate,500);
@@ -159,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
  
-
+  // this function will redraw an arc with a lighter color to give the appeance of a lit button 
   let drawBlur = (elem) => {
     return ctx.beginPath(),
     ctx.lineWidth = 50,
@@ -200,6 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  //  resets the game if an incorrect selection has been made
   let lost = () => {
     console.log("You Lost");
     round = 0;
@@ -212,8 +215,19 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log(round)
   }
 
+  let won = () => {
+    console.log("YOU WON!!")
+    round = 0
+    programPattern = []
+    ctx.clearRect(0,0,canvas.width,canvas.height)
+    ctx.font = '30px Arial'
+    ctx.fillText("YOU WON!!", 100,150)
+    startButton.disabled = false
+    startButton.addEventListener('click', start)
+  }
 
-// click shpws when a button has been clicked
+
+// click shows when a button has been clicked
 let click = (obj,i,time) => {
   buttons[obj[i]].sound.play();
   drawBlur(buttons[obj[i]]);
@@ -222,7 +236,7 @@ let click = (obj,i,time) => {
   },time);
 };
 
-// this function will
+// this function will effectually loop through the programPattern array and display it to the player
 let displayPattern = (obj,i) => {
   click(obj,i,500);
   window.setTimeout(function() {
@@ -237,4 +251,4 @@ let displayPattern = (obj,i) => {
   // listens for click to begin new game
   startButton.addEventListener('click', start);
 
-})
+// })
