@@ -219,7 +219,7 @@
       buttons.map((i) => draw(i));
       setTimeout(populate,1000);
       let roundCount = document.querySelector('#roundCount');
-      roundCount.style.display = "block";
+      roundCount.style.visibility = "visible";
       console.log("Round: " + round);
       startButton.disabled = true;
       // removes listener so programPattern array cannot be altered by another button click
