@@ -1,9 +1,5 @@
 // document.addEventListener('DOMContentLoaded', () => {
-<<<<<<< HEAD
-
-=======
 // Commented out to expose vars and functions for testing
->>>>>>> fd98cd655ea35a5a9bf2834cccd3052d3a001f49
   let canvas = document.querySelector('#canvas');
   let ctx = canvas.getContext('2d');
 
