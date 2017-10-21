@@ -1,5 +1,9 @@
 // document.addEventListener('DOMContentLoaded', () => {
+<<<<<<< HEAD
 
+=======
+// Commented out to expose vars and functions for testing
+>>>>>>> fd98cd655ea35a5a9bf2834cccd3052d3a001f49
   let canvas = document.querySelector('#canvas');
   let ctx = canvas.getContext('2d');
 
@@ -116,7 +120,7 @@
       }
       round = 0;
       // delay pushing new selection to pattern, this is to delay the displaying of the pattern
-      setTimeout(populate,500);
+      setTimeout(populate,550);
       return;
     }
     round++;
@@ -144,12 +148,6 @@
     }
     
   };
-
-
-  
-
-  canvas.addEventListener('mousedown', playerSelection);
-  canvas.addEventListener('mouseup', checkPattern);
 
   // function to draw an arc, requires input to be provided, this will use the objects in the buttons array
   let draw = (elem) => {
@@ -199,6 +197,8 @@
       startButton.disabled = true;
       // removes listener so programPattern array cannot be altered by another button click
       startButton.removeEventListener('click', start);
+      canvas.addEventListener('mousedown', playerSelection);
+      canvas.addEventListener('mouseup', checkPattern);
     }
   }
 
@@ -212,7 +212,10 @@
     ctx.fillText("You Lost",100,150);
     startButton.disabled = false;
     startButton.addEventListener('click', start);
-    console.log(round)
+    console.log(round);
+    //  I want to not allow the player's clicks to do anything until the game has been reset
+    canvas.removeEventListener('mousedown',playerSelection);
+    canvas.removeEventListener('mouseup', checkPattern);
   }
 
   let won = () => {
@@ -251,4 +254,8 @@ let displayPattern = (obj,i) => {
   // listens for click to begin new game
   startButton.addEventListener('click', start);
 
+<<<<<<< HEAD
 // })
+=======
+// });
+>>>>>>> fd98cd655ea35a5a9bf2834cccd3052d3a001f49
