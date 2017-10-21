@@ -5,6 +5,7 @@
 
   let startButton = document.querySelector('#startgame');
   let strict = document.querySelector('#strict')
+  let restart = document.querySelector('#reset')
 
   let strictMode = false
   
@@ -15,6 +16,14 @@
       strict.classList.add("btn-danger"),
       strict.removeEventListener('click', strictFunc)
     ) : console.log("Already selected");
+  }
+
+  let restartFunc = () => {
+    restart.removeEventListener('click', restartFunc)
+    strictMode = false
+    round = 0
+    programPattern = []
+    start()
   }
 
   // number representing what round the player is on
@@ -213,6 +222,8 @@
       ) : (
         console.log("Element not hidden")
       )
+      restart.style.visibility = "visible";
+      restart.addEventListener('click', restartFunc)
       ctx.fillStyle = "rgb(94, 94, 94)";
       ctx.fillRect(0,0,canvas.width,canvas.height)
       // iterate over the buttons array and call the draw function using each object in the array
