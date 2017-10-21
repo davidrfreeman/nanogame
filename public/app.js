@@ -254,8 +254,4 @@ let displayPattern = (obj,i) => {
   // listens for click to begin new game
   startButton.addEventListener('click', start);
 
-<<<<<<< HEAD
-// })
-=======
 // });
->>>>>>> fd98cd655ea35a5a9bf2834cccd3052d3a001f49
