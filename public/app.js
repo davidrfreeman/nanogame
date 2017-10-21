@@ -4,6 +4,18 @@
   let ctx = canvas.getContext('2d');
 
   let startButton = document.querySelector('#startgame');
+  let strict = document.querySelector('#strict')
+
+  let strictMode = false
+  
+  let strictFunc = () => {
+    strictMode === false ? (
+      strictMode = true,
+      strict.classList.remove("btn-default"),
+      strict.classList.add("btn-danger"),
+      strict.removeEventListener('click', strictFunc)
+    ) : console.log("Already selected");
+  }
 
   // number representing what round the player is on
   let round = 0;
@@ -74,7 +86,10 @@
         
         i = 0;
         if(programPattern[round] !== 0) {
-          lost();
+          strictMode === true ? lost() : (
+            setTimeout(() => displayPattern(programPattern, 0),500),
+            round = 0
+          );
           return;
         }
       } else {
@@ -83,7 +98,10 @@
         
         i = 3;
         if(programPattern[round] !== 3) {
-          lost();
+          strictMode === true ? lost() : (
+            setTimeout(() => displayPattern(programPattern, 0),500),
+            round = 0
+          );
           return;
         }
       }
@@ -95,7 +113,10 @@
         
         i = 1;
         if(programPattern[round] !== 1) {
-          lost();
+          strictMode === true ? lost() : (
+            setTimeout(() => displayPattern(programPattern, 0),500),
+            round = 0
+          );
           return;
         }
       } else {
@@ -104,7 +125,10 @@
         
         i = 2;
         if(programPattern[round]!==2) {
-          lost();
+          strictMode === true ? lost() : (
+            setTimeout(() => displayPattern(programPattern, 0),500),
+            round = 0
+          );
           return;
         }
       }
@@ -182,6 +206,13 @@
   // begins a new game
   let start = () => {
     if(round === 0) {
+      strict.classList.contains("hidden") ? (
+        strict.classList.remove("hidden"),
+        startButton.classList.add("hidden"),
+        strict.addEventListener('click', strictFunc)
+      ) : (
+        console.log("Element not hidden")
+      )
       ctx.fillStyle = "rgb(94, 94, 94)";
       ctx.fillRect(0,0,canvas.width,canvas.height)
       // iterate over the buttons array and call the draw function using each object in the array
@@ -200,6 +231,11 @@
 
   //  resets the game if an incorrect selection has been made
   let lost = () => {
+    strictMode = false
+    strict.classList.add("hidden")
+    strict.classList.remove("btn-danger")
+    strict.classList.add("btn-default")
+    startButton.classList.remove("hidden")  
     console.log("You Lost");
     round = 0;
     programPattern = [];
@@ -244,8 +280,6 @@ let displayPattern = (obj,i) => {
     };
   },1000);
 };
-
-
 
   // listens for click to begin new game
   startButton.addEventListener('click', start);
