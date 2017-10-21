@@ -1,4 +1,4 @@
-// document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
 // Commented out to expose vars and functions for testing
   let canvas = document.querySelector('#canvas');
   let ctx = canvas.getContext('2d');
@@ -23,6 +23,7 @@
     strictMode = false
     round = 0
     programPattern = []
+    document.querySelector('#round').innerText = ""
     start()
   }
 
@@ -295,4 +296,4 @@ let displayPattern = (obj,i) => {
   // listens for click to begin new game
   startButton.addEventListener('click', start);
 
-// });
+});
